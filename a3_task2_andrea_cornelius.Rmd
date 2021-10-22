@@ -58,8 +58,10 @@ Make sure to `View()` the resulting data frame (remember: run `View()` in the Co
 
 ```{r}
 # Your code here: 
-
-
+sw_split_name <- starwars %>% # Start with starwars
+  separate(col = name, # Separate the name column...
+           into = c("name_1","name_2"), # Into two columns 'name_1' & 'name_2'
+           sep = "-") # Separated at the first dash
 ```
 
 #### 1B. Follow me
@@ -92,8 +94,12 @@ Make sure to `View()` the resulting data frame (remember: run `View()` in the Co
 
 ```{r}
 # Your code here:
-
-
+sw_skin_sep <- starwars %>% # Start from starwars data
+  separate(col = skin_color, # Separate the 'skin_color' column
+           into = c("skin_1", "skin_2"), # Into two columns
+           sep = ",", # Creating the separation at the first *comma*
+           extra = "merge", # If additional commas, merge all into the second column
+           remove = FALSE) # And do *not* remove the original column
 ```
 
 ### 2. `tidyr::unite()`
@@ -114,7 +120,7 @@ Check the output after running the code.
 mpg_make_model <- mpg %>% # Start with mpg
   unite(col = make_model, # Create a new column called 'make_model'
         c(manufacturer, model), # That combines the manufacturer & model column
-        sep = "HEY!" # Puts "HEY!" between the pieces (default is underscore)
+        sep = "YoLo!" # Puts "HEY!" between the pieces (default is underscore)
         ) 
 
 # Feel free to try different separators in the `sep = ""` argument above.
@@ -128,8 +134,11 @@ In the code chunk below, starting from the `mpg` data create a new data frame ca
 
 ```{r}
 # Your code here: 
-
-
+mpg_model_class <- mpg %>% # Start with mpg
+  unite(col = model_class, # Create a new column called 'mpg_model_class'
+        c(model, class),  # That combines the model and class columns
+        sep = "-", # Puts a dash between the 2 pieces
+        remove = FALSE) # And do *not* remove the original column
 ```
 
 ### 3. Parsing dates with `lubridate()`
@@ -158,7 +167,15 @@ In the code chunk below, use `ymd()` to convert a date that you choose in `YYYY-
 
 ```{r}
 # Your code here: 
+# Run the following lines of code, which contain dates in order of Year-Month-Day in different formats: 
 
+ymd(19980701)
+
+ymd("1998-07-01")
+
+ymd("1998/07/01")
+
+# See what shows up below? This in date format (year - month - day)
 
 ```
 
@@ -184,8 +201,12 @@ In the code chunk below, create a vector (using `c()`, as above) stored as `some
 
 ```{r}
 # Your code here: 
+some_dates <- c(11061972, 02142007, 01301843) # Creates a vector of dates without spaces
+some_dates_converted <- mdy(some_dates) # Converts to Date, stores as some_dates_converted
+some_dates_converted # Return some_dates_converted
 
-
+class(some_dates_converted) # Check the class
+# See how the output puts dates into nice YYYY-MM-DD format? And that the class() of my_dates_converted is "Date"? That's great! 
 ```
 
 #### 3C. Follow me
@@ -197,18 +218,18 @@ In this example, I use `ymd()` within `mutate()` to add a `date_new` column with
 ```{r}
 # Run this code first (remember you can select lines you want to run, then press Cmd/Ctrl + Enter to run it): 
 
-lakers_dates <- lakers %>% 
-  mutate(date_new = ymd(date)) %>% 
-  mutate(year_new = year(date_new)) %>% 
-  mutate(month_new = month(date_new))
+lakers_dates <- lakers %>% # Start with lakers data
+  mutate(date_new = ymd(date)) %>% # Update the date column to ymd format
+  mutate(year_new = year(date_new)) %>% # Add a new year column
+  mutate(month_new = month(date_new)) # Add a new month column
   
 # ...and check out lakers_dates (View() in the Console). Notice that the three new columns have been added! 
 
 # Now run this code to calculate the total points by game_type (home or away) for each *month* in the data:
 
-points_by_month <- lakers_dates %>% 
-  group_by(game_type, month_new) %>% 
-  summarize(total_points = sum(points))
+points_by_month <- lakers_dates %>% # Start with lakers_dates data
+  group_by(game_type, month_new) %>%  # Group by game type and month_new
+  summarize(total_points = sum(points)) # Summarize total points per game type per month
 
 # View it: 
 points_by_month
@@ -228,8 +249,14 @@ Starting from the `lakers` dataset, create a new dataset called `gasol_hookshots
 
 ```{r}
 # Your code here: 
-
-
+gasol_hookshots <- lakers %>% # Start with lakers data
+  filter(player == "Pau Gasol", type == "hook") %>% # Filter player to Pau Gasol and shot type to hook
+  mutate(date_new = ymd(date)) %>% # Update the date column to ymd format
+  mutate(month_new = month(date_new)) # Add new month column
+  
+# Now run this code to calculate Gasol's hook shots by month for each *month* in the data:
+gasol_hookshots_by_month <- gasol_hookshots %>% 
+  count(month_new)
 ```
 
 ### 4. `dplyr::case_when()`
