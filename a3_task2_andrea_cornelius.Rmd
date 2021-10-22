@@ -170,9 +170,15 @@ In the code chunk below, use `ymd()` to convert a date that you choose in `YYYY-
 # Run the following lines of code, which contain dates in order of Year-Month-Day in different formats: 
 
 ymd(19980701)
+<<<<<<< HEAD
 
 ymd("1998-07-01")
 
+=======
+
+ymd("1998-07-01")
+
+>>>>>>> 9d53dca7447eb4c9f05287d7d94a7fc031fb3608
 ymd("1998/07/01")
 
 # See what shows up below? This in date format (year - month - day)
@@ -256,8 +262,12 @@ gasol_hookshots <- lakers %>% # Start with lakers data
   
 # Now run this code to calculate Gasol's hook shots by month for each *month* in the data:
 gasol_hookshots_by_month <- gasol_hookshots %>% 
+<<<<<<< HEAD
   count(month_new) %>%
   rename("hook_shots" = "n")
+=======
+  count(month_new)
+>>>>>>> 9d53dca7447eb4c9f05287d7d94a7fc031fb3608
 ```
 
 ### 4. `dplyr::case_when()`
